@@ -1,0 +1,11 @@
+-- 创建考勤记录表
+CREATE TABLE IF NOT EXISTS attendance (
+    id INT PRIMARY KEY AUTO_INCREMENT COMMENT '考勤ID',
+    student_id INT NOT NULL COMMENT '学生ID',
+    attendance_date DATE NOT NULL COMMENT '考勤日期',
+    status VARCHAR(20) NOT NULL COMMENT '考勤状态: 出勤/缺勤/迟到/早退/请假',
+    remark VARCHAR(200) COMMENT '备注',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    FOREIGN KEY (student_id) REFERENCES student(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='考勤记录表';
