@@ -6,9 +6,10 @@ export default defineConfig({
   base: '/Student-Management-System/',
   server: {
     port: 3000,
+    host: '0.0.0.0',  // 允许外部访问
     proxy: {
       '/api': {
-        target: 'http://localhost:8082',
+        target: 'http://localhost:8083',
         changeOrigin: true
       }
     }

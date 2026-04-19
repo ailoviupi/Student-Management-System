@@ -286,7 +286,8 @@ const handleDelete = (row) => {
 
 const handleExport = () => {
   const token = localStorage.getItem('token')
-  const url = 'http://localhost:8081/api/scores/export'
+  const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8083/api'
+  const url = `${baseURL}/scores/export`
   
   fetch(url, {
     headers: {
