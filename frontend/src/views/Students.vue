@@ -9,35 +9,49 @@
       </template>
 
       <el-form :model="queryForm" inline class="search-form">
-        <el-form-item label="姓名">
-          <el-input v-model="queryForm.name" placeholder="请输入姓名" clearable />
-        </el-form-item>
-        <el-form-item label="学号">
-          <el-input v-model="queryForm.studentNo" placeholder="请输入学号" clearable />
-        </el-form-item>
-        <el-form-item label="班级">
-          <el-select v-model="queryForm.classId" placeholder="请选择班级" clearable style="width: 150px">
-            <el-option v-for="item in classList" :key="item.id" :label="item.className" :value="item.id" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="性别">
-          <el-select v-model="queryForm.gender" placeholder="请选择性别" clearable style="width: 100px">
-            <el-option label="男" value="男" />
-            <el-option label="女" value="女" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="queryForm.studentStatus" placeholder="请选择状态" clearable style="width: 100px">
-            <el-option label="在读" value="在读" />
-            <el-option label="休学" value="休学" />
-            <el-option label="退学" value="退学" />
-            <el-option label="毕业" value="毕业" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="handleSearch">查询</el-button>
-          <el-button @click="handleReset">重置</el-button>
-        </el-form-item>
+        <el-row :gutter="10">
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
+            <el-form-item label="姓名" class="mobile-form-item">
+              <el-input v-model="queryForm.name" placeholder="请输入姓名" clearable />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
+            <el-form-item label="学号" class="mobile-form-item">
+              <el-input v-model="queryForm.studentNo" placeholder="请输入学号" clearable />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
+            <el-form-item label="班级" class="mobile-form-item">
+              <el-select v-model="queryForm.classId" placeholder="请选择班级" clearable style="width: 100%">
+                <el-option v-for="item in classList" :key="item.id" :label="item.className" :value="item.id" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
+            <el-form-item label="性别" class="mobile-form-item">
+              <el-select v-model="queryForm.gender" placeholder="请选择性别" clearable style="width: 100%">
+                <el-option label="男" value="男" />
+                <el-option label="女" value="女" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
+            <el-form-item label="状态" class="mobile-form-item">
+              <el-select v-model="queryForm.studentStatus" placeholder="请选择状态" clearable style="width: 100%">
+                <el-option label="在读" value="在读" />
+                <el-option label="休学" value="休学" />
+                <el-option label="退学" value="退学" />
+                <el-option label="毕业" value="毕业" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
+            <el-form-item class="mobile-form-item mobile-btn-group">
+              <el-button type="primary" @click="handleSearch">查询</el-button>
+              <el-button @click="handleReset">重置</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
 
       <el-table :data="tableData" v-loading="loading" border>
@@ -290,9 +304,79 @@ onMounted(() => {
   margin-bottom: 20px;
 }
 
+.mobile-form-item {
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.mobile-form-item :deep(.el-form-item__content) {
+  width: calc(100% - 60px);
+}
+
+.mobile-btn-group :deep(.el-form-item__content) {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+}
+
 .pagination {
   margin-top: 20px;
   display: flex;
   justify-content: flex-end;
+}
+
+/* 移动端表格横向滚动 */
+:deep(.el-table) {
+  width: 100%;
+}
+
+:deep(.el-table__body-wrapper) {
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  .search-form {
+    margin-bottom: 10px;
+  }
+  
+  .mobile-form-item {
+    margin-bottom: 8px;
+  }
+  
+  .mobile-form-item :deep(.el-form-item__label) {
+    width: 50px !important;
+    font-size: 12px;
+  }
+  
+  .mobile-form-item :deep(.el-form-item__content) {
+    width: calc(100% - 50px);
+    margin-left: 50px !important;
+  }
+  
+  .pagination {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  :deep(.el-pagination__sizes) {
+    display: none;
+  }
+  
+  :deep(.el-pagination__jump) {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  
+  .mobile-form-item :deep(.el-form-item__label) {
+    font-size: 11px;
+  }
 }
 </style>

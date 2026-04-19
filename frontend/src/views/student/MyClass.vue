@@ -279,13 +279,64 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
+  .page-title {
+    font-size: 20px;
+  }
+  
+  .page-subtitle {
+    font-size: 12px;
+  }
+  
+  .class-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+  }
+  
+  .class-title h2 {
+    font-size: 16px;
+  }
+  
+  .class-subtitle {
+    font-size: 12px;
+  }
+  
   .classmates-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
   
   .class-details {
     flex-direction: column;
     gap: 12px;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  .section-header .el-input {
+    width: 100% !important;
+  }
+  
+  .classmates-section {
+    padding: 16px;
+  }
+  
+  .classmate-card {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 18px;
+  }
+  
+  .classmates-section {
+    padding: 12px;
   }
 }
 </style>

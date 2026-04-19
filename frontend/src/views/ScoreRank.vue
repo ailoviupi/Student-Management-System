@@ -117,4 +117,32 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
 }
+
+/* 移动端表格横向滚动 */
+:deep(.el-table) {
+  width: 100%;
+}
+
+:deep(.el-table__body-wrapper) {
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  :deep(.el-form-item__label) {
+    font-size: 12px;
+  }
+  
+  :deep(.el-select) {
+    width: 100% !important;
+  }
+  
+  :deep(.el-form--inline .el-form-item) {
+    margin-right: 0;
+    width: 100%;
+  }
+  
+  :deep(.el-form--inline .el-form-item__content) {
+    width: calc(100% - 70px);
+  }
+}
 </style>

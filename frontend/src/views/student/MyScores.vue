@@ -268,8 +268,73 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
+  .page-title {
+    font-size: 20px;
+  }
+  
+  .page-subtitle {
+    font-size: 12px;
+  }
+  
+  .stats-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  
+  .stat-card {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  
+  .stat-value {
+    font-size: 18px;
+  }
+  
+  .stat-label {
+    font-size: 11px;
+  }
+  
+  .scores-section {
+    padding: 16px;
+  }
+  
+  .section-title {
+    font-size: 14px;
+  }
+  
+  /* 表格横向滚动 */
+  :deep(.el-table) {
+    width: 100%;
+  }
+  
+  :deep(.el-table__body-wrapper) {
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 18px;
+  }
+  
   .stats-cards {
     grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .stat-card {
+    padding: 10px;
+  }
+  
+  .scores-section {
+    padding: 12px;
   }
 }
 </style>

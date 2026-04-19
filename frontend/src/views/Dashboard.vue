@@ -27,8 +27,8 @@
       </div>
     </div>
 
-    <el-row :gutter="20" style="margin-top: 20px">
-      <el-col :span="12">
+    <el-row :gutter="20" style="margin-top: 20px" class="chart-row">
+      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="chart-col">
         <el-card class="chart-card">
           <template #header>
             <div class="chart-header">
@@ -36,10 +36,10 @@
               <span class="chart-sub">Gender Distribution</span>
             </div>
           </template>
-          <div ref="genderChart" style="height: 300px"></div>
+          <div ref="genderChart" class="chart-container"></div>
         </el-card>
       </el-col>
-      <el-col :span="12">
+      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="chart-col">
         <el-card class="chart-card">
           <template #header>
             <div class="chart-header">
@@ -47,13 +47,13 @@
               <span class="chart-sub">Class Distribution</span>
             </div>
           </template>
-          <div ref="classChart" style="height: 300px"></div>
+          <div ref="classChart" class="chart-container"></div>
         </el-card>
       </el-col>
     </el-row>
 
-    <el-row :gutter="20" style="margin-top: 20px">
-      <el-col :span="12">
+    <el-row :gutter="20" style="margin-top: 20px" class="chart-row">
+      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="chart-col">
         <el-card class="chart-card">
           <template #header>
             <div class="chart-header">
@@ -61,10 +61,10 @@
               <span class="chart-sub">Status Distribution</span>
             </div>
           </template>
-          <div ref="statusChart" style="height: 300px"></div>
+          <div ref="statusChart" class="chart-container"></div>
         </el-card>
       </el-col>
-      <el-col :span="12">
+      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="chart-col">
         <el-card class="chart-card">
           <template #header>
             <div class="chart-header">
@@ -72,7 +72,7 @@
               <span class="chart-sub">Course Average</span>
             </div>
           </template>
-          <div ref="scoreChart" style="height: 300px"></div>
+          <div ref="scoreChart" class="chart-container"></div>
         </el-card>
       </el-col>
     </el-row>
@@ -333,6 +333,14 @@ const initScoreChart = (data) => {
   margin-top: 2px;
 }
 
+.chart-container {
+  height: 300px;
+}
+
+.chart-col {
+  margin-bottom: 20px;
+}
+
 @media (max-width: 1200px) {
   .stat-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -342,6 +350,58 @@ const initScoreChart = (data) => {
 @media (max-width: 768px) {
   .stat-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .stat-card {
+    padding: 16px;
+  }
+  
+  .stat-value {
+    font-size: 24px;
+  }
+  
+  .chart-container {
+    height: 250px;
+  }
+  
+  .chart-col {
+    margin-bottom: 12px;
+  }
+  
+  .chart-row {
+    margin-top: 12px !important;
+  }
+  
+  .page-title {
+    font-size: 18px;
+  }
+  
+  .page-desc {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-container {
+    height: 200px;
+  }
+  
+  .stat-card {
+    padding: 12px;
+  }
+  
+  .stat-icon-wrap {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .stat-value {
+    font-size: 20px;
+  }
+  
+  .stat-title {
+    font-size: 12px;
   }
 }
 </style>

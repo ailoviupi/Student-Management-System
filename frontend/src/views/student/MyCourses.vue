@@ -395,6 +395,20 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
+  .page-title {
+    font-size: 20px;
+  }
+  
+  .page-subtitle {
+    font-size: 12px;
+  }
+  
+  .courses-section,
+  .course-list-section {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  
   .schedule-container {
     overflow-x: auto;
   }
@@ -402,6 +416,38 @@ onMounted(() => {
   .schedule-header,
   .time-row {
     min-width: 600px;
+  }
+  
+  .course-cards {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .course-card {
+    padding: 12px;
+  }
+  
+  .course-title {
+    font-size: 14px;
+  }
+  
+  .section-title {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 18px;
+  }
+  
+  .courses-section,
+  .course-list-section {
+    padding: 12px;
+  }
+  
+  .course-cards {
+    grid-template-columns: 1fr;
   }
 }
 </style>

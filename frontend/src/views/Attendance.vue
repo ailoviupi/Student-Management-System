@@ -271,4 +271,57 @@ onMounted(() => {
 .search-form {
   margin-bottom: 20px;
 }
+
+/* 移动端表格横向滚动 */
+:deep(.el-table) {
+  width: 100%;
+}
+
+:deep(.el-table__body-wrapper) {
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  .card-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  
+  :deep(.el-dialog) {
+    width: 90% !important;
+    margin: 0 auto;
+  }
+  
+  :deep(.el-dialog__body) {
+    padding: 16px !important;
+  }
+  
+  :deep(.el-form-item__label) {
+    width: 80px !important;
+  }
+  
+  :deep(.el-form-item__content) {
+    margin-left: 80px !important;
+  }
+  
+  :deep(.el-date-editor--daterange) {
+    width: 100% !important;
+  }
+  
+  :deep(.el-date-editor--daterange .el-range-input) {
+    width: 40%;
+  }
+}
+
+@media (max-width: 480px) {
+  :deep(.el-form-item__label) {
+    width: 70px !important;
+    font-size: 12px;
+  }
+  
+  :deep(.el-form-item__content) {
+    margin-left: 70px !important;
+  }
+}
 </style>

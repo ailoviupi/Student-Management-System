@@ -289,8 +289,92 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
+  .page-title {
+    font-size: 20px;
+  }
+  
+  .page-subtitle {
+    font-size: 12px;
+  }
+  
   .stats-cards {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  
+  .stat-card {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  
+  .stat-value {
+    font-size: 18px;
+  }
+  
+  .stat-label {
+    font-size: 11px;
+  }
+  
+  .filter-section {
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+  
+  .attendance-section {
+    padding: 16px;
+  }
+  
+  .section-title {
+    font-size: 14px;
+  }
+  
+  :deep(.el-radio-group) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  :deep(.el-radio-button__inner) {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 18px;
+  }
+  
+  .stats-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .stat-card {
+    padding: 10px;
+    gap: 8px;
+  }
+  
+  .stat-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+  
+  .stat-value {
+    font-size: 16px;
+  }
+  
+  .filter-section,
+  .attendance-section {
+    padding: 12px;
   }
 }
 </style>

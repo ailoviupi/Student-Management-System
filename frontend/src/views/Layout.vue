@@ -1,6 +1,13 @@
 <template>
   <el-container class="layout-container">
-    <el-aside :width="isCollapse ? '64px' : '220px'" class="aside">
+    <!-- 移动端遮罩层 -->
+    <div v-if="isMobile && !isCollapse" class="mobile-mask" @click="isCollapse = true"></div>
+    
+    <el-aside 
+      :width="isCollapse ? '64px' : '220px'" 
+      class="aside"
+      :class="{ 'mobile-aside': isMobile, 'mobile-hidden': isMobile && isCollapse }"
+    >
       <div class="logo" @click="$router.push('/')">
         <div class="logo-icon">
           <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -18,6 +25,7 @@
         text-color="rgba(255,255,255,0.65)"
         active-text-color="#fff"
         class="side-menu"
+        @select="handleMenuSelect"
       >
         <el-menu-item v-for="item in menuItems" :key="item.path" :index="item.path" class="menu-item">
           <el-icon>
@@ -33,7 +41,10 @@
           <div class="collapse-btn" @click="isCollapse = !isCollapse">
             <el-icon :size="18"><component :is="isCollapse ? 'Expand' : 'Fold'" /></el-icon>
           </div>
-          <el-breadcrumb separator="/">
+          <div class="mobile-menu-btn" v-if="isMobile" @click="isCollapse = false">
+            <el-icon :size="20"><Menu /></el-icon>
+          </div>
+          <el-breadcrumb separator="/" class="header-breadcrumb">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>{{ currentTitle }}</el-breadcrumb-item>
           </el-breadcrumb>
@@ -75,14 +86,39 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { ArrowDown, UserFilled, SwitchButton, Expand, Fold } from '@element-plus/icons-vue'
+import { ArrowDown, UserFilled, SwitchButton, Expand, Fold, Menu } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
 const isCollapse = ref(false)
+const isMobile = ref(false)
+
+// 检测是否为移动端
+const checkMobile = () => {
+  isMobile.value = window.innerWidth <= 768
+  if (isMobile.value) {
+    isCollapse.value = true
+  }
+}
+
+// 菜单选择后自动关闭（移动端）
+const handleMenuSelect = () => {
+  if (isMobile.value) {
+    isCollapse.value = true
+  }
+}
+
+onMounted(() => {
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
+})
 
 const userInfo = ref(JSON.parse(localStorage.getItem('userInfo') || '{}'))
 const userRole = computed(() => userInfo.value?.role || '')
@@ -342,5 +378,89 @@ const handleCommand = (command) => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+/* 移动端遮罩层 */
+.mobile-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+}
+
+/* 移动端侧边栏样式 */
+.mobile-aside {
+  position: fixed !important;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 999;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+}
+
+.mobile-aside.mobile-hidden {
+  transform: translateX(-100%);
+}
+
+/* 移动端菜单按钮 */
+.mobile-menu-btn {
+  display: none;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.2s;
+}
+
+.mobile-menu-btn:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+/* 响应式媒体查询 */
+@media (max-width: 768px) {
+  .header {
+    padding: 0 16px;
+  }
+  
+  .header-left .collapse-btn {
+    display: none;
+  }
+  
+  .mobile-menu-btn {
+    display: flex;
+  }
+  
+  .header-breadcrumb {
+    display: none;
+  }
+  
+  .header-right .user-name {
+    display: none;
+  }
+  
+  .header-right .arrow {
+    display: none;
+  }
+  
+  .main {
+    padding: 16px;
+  }
+  
+  .role-badge {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 12px;
+  }
 }
 </style>
