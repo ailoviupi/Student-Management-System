@@ -1,5 +1,6 @@
 package com.example.student.controller;
 
+import com.example.student.common.RequireRole;
 import com.example.student.common.Result;
 import com.example.student.entity.Attendance;
 import com.example.student.service.AttendanceService;
@@ -12,6 +13,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/attendance")
 @CrossOrigin
+@RequireRole({"admin", "teacher"})
 public class AttendanceController {
 
     @Autowired
@@ -67,6 +69,7 @@ public class AttendanceController {
     }
     
     // 学生端接口：获取当前登录学生的考勤记录
+    @RequireRole("student")
     @GetMapping("/my-attendance")
     public Result<List<Attendance>> getMyAttendance(
             @RequestAttribute("username") String username,
@@ -81,6 +84,7 @@ public class AttendanceController {
     }
     
     // 学生端接口：获取当前登录学生的考勤统计
+    @RequireRole("student")
     @GetMapping("/my-statistics")
     public Result<Map<String, Object>> getMyStatistics(
             @RequestAttribute("username") String username,

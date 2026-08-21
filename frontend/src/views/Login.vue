@@ -12,9 +12,9 @@
           <div class="logo-ring">
             <div class="logo-inner">
               <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 4L36 12V28L20 36L4 28V12L20 4Z" stroke="white" stroke-width="2" fill="none"/>
-                <path d="M20 10L30 15V25L20 30L10 25V15L20 10Z" fill="rgba(255,255,255,0.2)"/>
-                <circle cx="20" cy="20" r="4" fill="white"/>
+                <path d="M20 4L36 12V28L20 36L4 28V12L20 4Z" stroke="#0d9488" stroke-width="2" fill="none"/>
+                <path d="M20 10L30 15V25L20 30L10 25V15L20 10Z" fill="rgba(13,148,136,0.12)"/>
+                <circle cx="20" cy="20" r="4" fill="#0d9488"/>
               </svg>
             </div>
           </div>
@@ -101,29 +101,9 @@
             </el-form-item>
           </el-form>
           
-          <div class="login-divider">
-            <span>快速体验</span>
-          </div>
-          
-          <div class="test-accounts">
-            <div class="account-tag" @click="fillAccount('admin', 'admin123')">
-              <div class="tag-icon admin-icon">
-                <el-icon><UserFilled /></el-icon>
-              </div>
-              <div class="tag-text">
-                <span class="tag-role">管理员</span>
-                <span class="tag-pwd">admin123</span>
-              </div>
-            </div>
-            <div class="account-tag" @click="fillAccount('teacher1', 'teacher123')">
-              <div class="tag-icon teacher-icon">
-                <el-icon><User /></el-icon>
-              </div>
-              <div class="tag-text">
-                <span class="tag-role">教师</span>
-                <span class="tag-pwd">teacher123</span>
-              </div>
-            </div>
+          <div class="login-footer">
+            <p class="login-tip">教师账号：teacher1 / teacher123</p>
+            <p class="login-tip">学生使用学号登录，默认密码：123456</p>
           </div>
         </div>
       </div>
@@ -135,7 +115,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { User, Lock, UserFilled, View, Hide } from '@element-plus/icons-vue'
+import { User, Lock, View, Hide } from '@element-plus/icons-vue'
 import { login } from '../api/auth'
 
 const router = useRouter()
@@ -172,8 +152,11 @@ const handleLogin = async () => {
 
   loading.value = true
   try {
-    const res = await login(form)
-    if (res.code === 200) {
+    const loginData = { username: form.username, password: form.password }
+    const res = await login(loginData)
+    console.log('Login response:', res)
+    
+    if (res && (res.code === 200 || res.code === '200') && res.data && res.data.token) {
       localStorage.setItem('token', res.data.token)
       localStorage.setItem('userInfo', JSON.stringify(res.data))
       
@@ -185,7 +168,18 @@ const handleLogin = async () => {
       
       ElMessage.success('登录成功，欢迎回来！')
       router.push('/')
+    } else {
+      console.error('Login validation failed:', res)
+      ElMessage.error(res?.message || '登录失败，返回数据异常')
     }
+  } catch (error) {
+    console.error('Login error:', error)
+    // 区分取消请求和真正的错误
+    if (error && error.cancelled) {
+      // 请求被取消，不显示错误
+      return
+    }
+    ElMessage.error('登录失败，请检查用户名和密码后重试')
   } finally {
     loading.value = false
   }
@@ -206,7 +200,7 @@ onMounted(() => {
   display: flex;
   position: relative;
   overflow: hidden;
-  background: #0f172a;
+  background: linear-gradient(135deg, #f0fdfa 0%, #ecfeff 45%, #f8fafc 100%);
 }
 
 .login-bg {
@@ -218,14 +212,14 @@ onMounted(() => {
 .orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.5;
+  filter: blur(70px);
+  opacity: 0.55;
 }
 
 .orb-1 {
   width: 600px;
   height: 600px;
-  background: #6366f1;
+  background: #5eead4;
   top: -200px;
   left: -100px;
   animation: orbFloat1 8s ease-in-out infinite;
@@ -234,7 +228,7 @@ onMounted(() => {
 .orb-2 {
   width: 400px;
   height: 400px;
-  background: #06b6d4;
+  background: #a5f3fc;
   bottom: -100px;
   right: 30%;
   animation: orbFloat2 10s ease-in-out infinite;
@@ -243,7 +237,7 @@ onMounted(() => {
 .orb-3 {
   width: 300px;
   height: 300px;
-  background: #8b5cf6;
+  background: #c7d2fe;
   top: 50%;
   left: 30%;
   animation: orbFloat3 12s ease-in-out infinite;
@@ -266,8 +260,8 @@ onMounted(() => {
   position: absolute;
   inset: 0;
   background-image: 
-    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    linear-gradient(rgba(13,148,136,0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13,148,136,0.045) 1px, transparent 1px);
   background-size: 60px 60px;
 }
 
@@ -290,7 +284,7 @@ onMounted(() => {
 
 .brand-section {
   text-align: center;
-  color: #fff;
+  color: #1e293b;
   max-width: 480px;
 }
 
@@ -299,9 +293,9 @@ onMounted(() => {
   height: 80px;
   margin: 0 auto 28px;
   border-radius: 20px;
-  background: rgba(255,255,255,0.1);
+  background: rgba(13,148,136,0.06);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(13,148,136,0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -309,8 +303,8 @@ onMounted(() => {
 }
 
 @keyframes logoPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(99,102,241,0.4); }
-  50% { box-shadow: 0 0 0 12px rgba(99,102,241,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(13,148,136,0.35); }
+  50% { box-shadow: 0 0 0 12px rgba(13,148,136,0); }
 }
 
 .logo-inner svg {
@@ -323,14 +317,14 @@ onMounted(() => {
   font-weight: 700;
   margin: 0 0 8px 0;
   letter-spacing: 1px;
-  background: linear-gradient(135deg, #fff 0%, #c7d2fe 100%);
+  background: linear-gradient(135deg, #0f766e 0%, #0d9488 50%, #06b6d4 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .brand-subtitle {
   font-size: 15px;
-  opacity: 0.6;
+  color: rgba(30, 41, 59, 0.5);
   margin: 0 0 32px 0;
   font-weight: 400;
   letter-spacing: 2px;
@@ -340,7 +334,7 @@ onMounted(() => {
 .brand-divider {
   width: 40px;
   height: 3px;
-  background: linear-gradient(90deg, #6366f1, #06b6d4);
+  background: linear-gradient(90deg, #0d9488, #06b6d4);
   margin: 0 auto 32px;
   border-radius: 2px;
 }
@@ -355,7 +349,7 @@ onMounted(() => {
   align-items: center;
   margin: 14px 0;
   font-size: 15px;
-  opacity: 0.85;
+  color: #475569;
   gap: 12px;
 }
 
@@ -363,9 +357,9 @@ onMounted(() => {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #6366f1;
+  background: #0d9488;
   flex-shrink: 0;
-  box-shadow: 0 0 8px rgba(99,102,241,0.6);
+  box-shadow: 0 0 8px rgba(13,148,136,0.5);
 }
 
 .login-right {
@@ -375,19 +369,19 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   padding: 40px;
-  background: rgba(255,255,255,0.03);
+  background: rgba(255,255,255,0.65);
   backdrop-filter: blur(20px);
-  border-left: 1px solid rgba(255,255,255,0.08);
+  border-left: 1px solid rgba(229, 234, 240, 0.9);
 }
 
 .login-box {
   width: 100%;
   max-width: 400px;
   padding: 40px;
-  background: rgba(255,255,255,0.06);
+  background: #ffffff;
   border-radius: 20px;
-  border: 1px solid rgba(255,255,255,0.1);
-  backdrop-filter: blur(10px);
+  border: 1px solid #e5eaf0;
+  box-shadow: 0 20px 40px -12px rgba(15, 23, 42, 0.12);
 }
 
 .login-header {
@@ -398,13 +392,13 @@ onMounted(() => {
 .login-title {
   font-size: 28px;
   font-weight: 700;
-  color: #fff;
+  color: #1e293b;
   margin: 0 0 8px 0;
 }
 
 .login-subtitle {
   font-size: 14px;
-  color: rgba(255,255,255,0.5);
+  color: rgba(30, 41, 59, 0.5);
   margin: 0;
 }
 
@@ -428,26 +422,26 @@ onMounted(() => {
   display: flex;
   align-items: center;
   height: 52px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 12px;
   padding: 0 16px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .input-wrapper:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.2);
+  background: #f1f5f9;
+  border-color: #cbd5e1;
 }
 
 .input-wrapper:focus-within {
-  background: rgba(255,255,255,0.1);
-  border-color: #6366f1;
-  box-shadow: 0 0 0 4px rgba(99,102,241,0.15);
+  background: #ffffff;
+  border-color: #0d9488;
+  box-shadow: 0 0 0 4px rgba(13,148,136,0.12);
 }
 
 .input-icon {
-  color: rgba(255,255,255,0.4);
+  color: rgba(100,116,139,0.6);
   font-size: 18px;
   margin-right: 12px;
   flex-shrink: 0;
@@ -455,7 +449,7 @@ onMounted(() => {
 }
 
 .input-wrapper:focus-within .input-icon {
-  color: #6366f1;
+  color: #0d9488;
 }
 
 .custom-input-field {
@@ -464,17 +458,17 @@ onMounted(() => {
   background: transparent;
   border: none;
   outline: none;
-  color: #fff;
+  color: #1e293b;
   font-size: 15px;
   font-family: inherit;
 }
 
 .custom-input-field::placeholder {
-  color: rgba(255,255,255,0.35);
+  color: rgba(100,116,139,0.55);
 }
 
 .eye-icon {
-  color: rgba(255,255,255,0.4);
+  color: rgba(100,116,139,0.6);
   font-size: 18px;
   cursor: pointer;
   flex-shrink: 0;
@@ -485,8 +479,8 @@ onMounted(() => {
 }
 
 .eye-icon:hover {
-  color: rgba(255,255,255,0.7);
-  background: rgba(255,255,255,0.1);
+  color: #0f766e;
+  background: #f1f5f9;
 }
 
 .input-suffix {
@@ -504,13 +498,13 @@ onMounted(() => {
 }
 
 :deep(.el-checkbox__label) {
-  color: rgba(255,255,255,0.6) !important;
+  color: #475569 !important;
   font-size: 13px;
 }
 
 :deep(.el-checkbox__inner) {
-  background: transparent;
-  border-color: rgba(255,255,255,0.3);
+  background: #fff;
+  border-color: #cbd5e1;
 }
 
 .login-button-item {
@@ -523,7 +517,7 @@ onMounted(() => {
   font-size: 16px;
   font-weight: 600;
   border-radius: 10px;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #0d9488 0%, #06b6d4 100%);
   border: none;
   transition: all 0.3s;
   letter-spacing: 2px;
@@ -531,14 +525,26 @@ onMounted(() => {
 
 .login-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(99,102,241,0.4);
+  box-shadow: 0 8px 24px rgba(13,148,136,0.35);
+}
+
+.login-footer {
+  margin-top: 28px;
+  text-align: center;
+}
+
+.login-tip {
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 6px 0;
+  line-height: 1.5;
 }
 
 .login-divider {
   display: flex;
   align-items: center;
   margin: 28px 0;
-  color: rgba(255,255,255,0.3);
+  color: #94a3b8;
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -549,7 +555,7 @@ onMounted(() => {
   content: '';
   flex: 1;
   height: 1px;
-  background: rgba(255,255,255,0.1);
+  background: #e5eaf0;
 }
 
 .login-divider span {
@@ -567,17 +573,17 @@ onMounted(() => {
   align-items: center;
   gap: 10px;
   padding: 10px 16px;
-  background: rgba(255,255,255,0.05);
+  background: #f8fafc;
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid #e5eaf0;
   flex: 1;
 }
 
 .account-tag:hover {
-  background: rgba(99,102,241,0.15);
-  border-color: rgba(99,102,241,0.3);
+  background: rgba(13,148,136,0.08);
+  border-color: rgba(13,148,136,0.3);
   transform: translateY(-2px);
 }
 
@@ -594,7 +600,7 @@ onMounted(() => {
 }
 
 .admin-icon {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, #0d9488, #06b6d4);
 }
 
 .teacher-icon {
@@ -612,19 +618,19 @@ onMounted(() => {
 
 .tag-role {
   font-size: 12px;
-  color: rgba(255,255,255,0.8);
+  color: #334155;
   font-weight: 500;
 }
 
 .tag-pwd {
   font-size: 11px;
-  color: rgba(255,255,255,0.4);
+  color: #94a3b8;
 }
 
 .copyright {
   margin-top: 32px;
   text-align: center;
-  color: rgba(255,255,255,0.25);
+  color: #cbd5e1;
   font-size: 12px;
 }
 

@@ -61,6 +61,48 @@ const routes = [
         meta: { title: '考勤管理', icon: 'Calendar' }
       },
       {
+        path: 'warning',
+        name: 'Warning',
+        component: () => import('../views/Warning.vue'),
+        meta: { title: '学业预警', icon: 'Warning' }
+      },
+      {
+        path: 'export',
+        name: 'Export',
+        component: () => import('../views/Export.vue'),
+        meta: { title: '数据导出', icon: 'Download' }
+      },
+      {
+        path: 'operation-log',
+        name: 'OperationLog',
+        component: () => import('../views/OperationLog.vue'),
+        meta: { title: '操作日志', icon: 'Document', adminOnly: true }
+      },
+      {
+        path: 'notification',
+        name: 'Notification',
+        component: () => import('../views/Notification.vue'),
+        meta: { title: '消息通知', icon: 'Bell' }
+      },
+      {
+        path: 'chat',
+        name: 'Chat',
+        component: () => import('../views/Chat.vue'),
+        meta: { title: '实时通信', icon: 'ChatDotSquare' }
+      },
+      {
+        path: 'scholarship',
+        name: 'Scholarship',
+        component: () => import('../views/Scholarship.vue'),
+        meta: { title: '奖学金评定', icon: 'Trophy' }
+      },
+      {
+        path: 'schedule',
+        name: 'Schedule',
+        component: () => import('../views/Schedule.vue'),
+        meta: { title: '智能排课', icon: 'Calendar' }
+      },
+      {
         path: 'profile',
         name: 'Profile',
         component: () => import('../views/Profile.vue'),
@@ -92,16 +134,40 @@ const routes = [
         meta: { title: '我的班级', icon: 'School', studentOnly: true }
       },
       {
+        path: 'my-homework',
+        name: 'MyHomework',
+        component: () => import('../views/student/MyHomework.vue'),
+        meta: { title: '我的作业', icon: 'Edit', studentOnly: true }
+      },
+      {
+        path: 'my-exams',
+        name: 'MyExams',
+        component: () => import('../views/student/MyExams.vue'),
+        meta: { title: '我的考试', icon: 'Document', studentOnly: true }
+      },
+      {
+        path: 'homework',
+        name: 'Homework',
+        component: () => import('../views/Homework.vue'),
+        meta: { title: '作业管理', icon: 'Edit' }
+      },
+      {
+        path: 'exams',
+        name: 'Exams',
+        component: () => import('../views/Exams.vue'),
+        meta: { title: '考试管理', icon: 'Document' }
+      },
+      {
         path: 'settings',
         name: 'Settings',
         component: () => import('../views/Settings.vue'),
-        meta: { title: '系统设置', icon: 'Setting' }
+        meta: { title: '系统设置', icon: 'Setting', adminOnly: true }
       },
       {
         path: 'users',
         name: 'Users',
         component: () => import('../views/Users.vue'),
-        meta: { title: '用户管理', icon: 'Setting' }
+        meta: { title: '用户管理', icon: 'Setting', adminOnly: true }
       }
     ]
   }
@@ -114,12 +180,23 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
+  const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
+  
   if (to.path !== '/login' && !token) {
     next('/login')
   } else if (to.path === '/login' && token) {
     next('/')
   } else {
-    next()
+    // 学生角色的首页重定向到"我的成绩"（数据概览仅管理员/教师可见）
+    if (userInfo?.role === 'student' && to.path === '/dashboard') {
+      next('/my-scores')
+    } else if (to.meta?.adminOnly && userInfo?.role !== 'admin') {
+      next('/dashboard')
+    } else if (to.meta?.studentOnly && userInfo?.role !== 'student') {
+      next('/dashboard')
+    } else {
+      next()
+    }
   }
 })
 

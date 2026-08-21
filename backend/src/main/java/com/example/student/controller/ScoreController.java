@@ -1,6 +1,7 @@
 package com.example.student.controller;
 
 import com.alibaba.excel.EasyExcel;
+import com.example.student.common.RequireRole;
 import com.example.student.common.Result;
 import com.example.student.dto.ScoreQueryDTO;
 import com.example.student.entity.Score;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/scores")
 @CrossOrigin
+@RequireRole({"admin", "teacher"})
 public class ScoreController {
     
     @Autowired
@@ -111,6 +113,7 @@ public class ScoreController {
     }
     
     // 学生端接口：获取当前登录学生的成绩
+    @RequireRole("student")
     @GetMapping("/my-scores")
     public Result<List<Score>> getMyScores(@RequestAttribute("username") String username,
                                            @RequestAttribute("role") String role) {
@@ -121,6 +124,7 @@ public class ScoreController {
     }
     
     // 学生端接口：获取当前登录学生的成绩统计
+    @RequireRole("student")
     @GetMapping("/my-statistics")
     public Result<Map<String, Object>> getMyStatistics(@RequestAttribute("username") String username,
                                                        @RequestAttribute("role") String role) {

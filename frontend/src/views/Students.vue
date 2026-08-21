@@ -101,8 +101,8 @@
         </el-form-item>
         <el-form-item label="性别" prop="gender">
           <el-radio-group v-model="form.gender">
-            <el-radio label="男">男</el-radio>
-            <el-radio label="女">女</el-radio>
+            <el-radio value="男">男</el-radio>
+            <el-radio value="女">女</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="电话" prop="phone">
@@ -178,11 +178,39 @@ const form = reactive({
   studentStatus: '在读'
 })
 
+const validatePhone = (rule, value, callback) => {
+  if (!value) {
+    callback()
+    return
+  }
+  const reg = /^1[3-9]\d{9}$/
+  if (!reg.test(value)) {
+    callback(new Error('请输入正确的手机号'))
+  } else {
+    callback()
+  }
+}
+
+const validateEmail = (rule, value, callback) => {
+  if (!value) {
+    callback()
+    return
+  }
+  const reg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+  if (!reg.test(value)) {
+    callback(new Error('请输入正确的邮箱地址'))
+  } else {
+    callback()
+  }
+}
+
 const rules = {
   studentNo: [{ required: true, message: '请输入学号', trigger: 'blur' }],
   name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
   gender: [{ required: true, message: '请选择性别', trigger: 'change' }],
-  classId: [{ required: true, message: '请选择班级', trigger: 'change' }]
+  classId: [{ required: true, message: '请选择班级', trigger: 'change' }],
+  phone: [{ validator: validatePhone, trigger: 'blur' }],
+  email: [{ validator: validateEmail, trigger: 'blur' }]
 }
 
 const getStatusType = (status) => {

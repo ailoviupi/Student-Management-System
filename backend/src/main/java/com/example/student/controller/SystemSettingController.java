@@ -1,5 +1,6 @@
 package com.example.student.controller;
 
+import com.example.student.common.RequireRole;
 import com.example.student.common.Result;
 import com.example.student.entity.SystemSetting;
 import com.example.student.service.SystemSettingService;
@@ -12,6 +13,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/settings")
 @CrossOrigin
+@RequireRole("admin")
 public class SystemSettingController {
 
     @Autowired

@@ -92,7 +92,7 @@ public class StudentServiceImpl implements StudentService {
         vo.setTotalStudents(studentMapper.countAll());
         vo.setTotalClasses((long) classMapper.findAll().size());
         vo.setTotalCourses((long) courseMapper.findAll().size());
-        vo.setTotalUsers((long) 3);
+        vo.setTotalUsers(userMapper.countAll());
         
         Map<String, Long> genderDist = new HashMap<>();
         List<Map<String, Object>> genderList = studentMapper.countByGender();

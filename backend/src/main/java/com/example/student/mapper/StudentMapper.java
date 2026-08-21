@@ -56,4 +56,7 @@ public interface StudentMapper {
     
     @Select("SELECT COUNT(*) FROM student")
     long countAll();
+
+    @Select("SELECT s.*, c.class_name as className FROM student s LEFT JOIN class c ON s.class_id = c.id")
+    List<Student> findAll();
 }

@@ -37,7 +37,7 @@
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #0d9488, #0891b2);">
           <el-icon><TrendCharts /></el-icon>
         </div>
         <div class="stat-info">
@@ -50,11 +50,11 @@
     <!-- 筛选器 -->
     <div class="filter-section">
       <el-radio-group v-model="filterStatus" @change="handleFilterChange" size="small">
-        <el-radio-button label="">全部</el-radio-button>
-        <el-radio-button label="出勤">出勤</el-radio-button>
-        <el-radio-button label="缺勤">缺勤</el-radio-button>
-        <el-radio-button label="迟到">迟到</el-radio-button>
-        <el-radio-button label="请假">请假</el-radio-button>
+        <el-radio-button value="">全部</el-radio-button>
+        <el-radio-button value="出勤">出勤</el-radio-button>
+        <el-radio-button value="缺勤">缺勤</el-radio-button>
+        <el-radio-button value="迟到">迟到</el-radio-button>
+        <el-radio-button value="请假">请假</el-radio-button>
       </el-radio-group>
     </div>
 

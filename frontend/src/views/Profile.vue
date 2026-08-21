@@ -60,7 +60,7 @@
           <div class="student-info">
             <el-alert
               title="学生账号说明"
-              description="学生账号默认密码为 123456 或学号后6位。如需修改密码，请联系管理员。"
+              description="学生账号默认密码为 123456 或学号后6位，首次登录后请在下方的修改密码区域设置新密码。"
               type="info"
               :closable="false"
               show-icon
@@ -70,14 +70,14 @@
               <ul>
                 <li>我的成绩 - 查看个人各科成绩及统计</li>
                 <li>我的课程 - 查看本学期课程安排</li>
-                <li>数据概览 - 查看系统统计数据</li>
+                <li>我的作业 - 查看并提交作业</li>
               </ul>
             </div>
           </div>
         </el-card>
         
-        <!-- 管理员和教师显示修改密码 -->
-        <el-card class="password-card" v-else>
+        <!-- 所有角色均显示修改密码（学生走 student_account 表 BCrypt 校验） -->
+        <el-card class="password-card">
           <template #header>
             <div class="card-header">
               <span class="card-title">修改密码</span>
@@ -209,7 +209,7 @@ onMounted(() => {
 
 .profile-banner {
   height: 80px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
+  background: linear-gradient(135deg, #0d9488, #0891b2, #06b6d4);
 }
 
 .profile-body {
@@ -226,7 +226,7 @@ onMounted(() => {
   width: 72px;
   height: 72px;
   border-radius: 16px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, #0d9488, #0891b2);
   color: #fff;
   display: inline-flex;
   align-items: center;
@@ -234,7 +234,7 @@ onMounted(() => {
   font-size: 28px;
   font-weight: 700;
   border: 4px solid #fff;
-  box-shadow: 0 4px 12px rgba(99,102,241,0.3);
+  box-shadow: 0 4px 12px rgba(13,148,136,0.3);
 }
 
 .user-name {
@@ -257,8 +257,8 @@ onMounted(() => {
 }
 
 .role-badge.admin {
-  background: rgba(99,102,241,0.1);
-  color: #6366f1;
+  background: rgba(13,148,136,0.1);
+  color: #0d9488;
 }
 
 .role-badge.teacher {

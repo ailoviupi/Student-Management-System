@@ -12,27 +12,39 @@
 }
 
 :root {
-  --primary: #6366f1;
-  --primary-light: #818cf8;
-  --primary-dark: #4f46e5;
+  /* ===== 品牌色：清爽青蓝（teal-cyan） ===== */
+  --primary: #0d9488;
+  --primary-light: #14b8a6;
+  --primary-dark: #0f766e;
   --accent: #06b6d4;
-  --bg-dark: #0f172a;
-  --bg-sidebar: #1e293b;
-  --bg-sidebar-hover: #334155;
-  --bg-main: #f1f5f9;
+  --primary-gradient: linear-gradient(135deg, #0d9488, #06b6d4);
+
+  /* ===== Element Plus 主题变量（让所有组件自动跟随主色） ===== */
+  --el-color-primary: #0d9488;
+  --el-color-primary-light-3: #14b8a6;
+  --el-color-primary-light-5: #5eead4;
+  --el-color-primary-light-7: #99f6e4;
+  --el-color-primary-light-8: #ccfbf1;
+  --el-color-primary-light-9: #f0fdfa;
+  --el-color-primary-dark-2: #0f766e;
+  --el-color-success: #10b981;
+  --el-color-warning: #f59e0b;
+  --el-color-danger: #ef4444;
+  --el-color-info: #0ea5e9;
+
+  /* ===== 布局与文字 ===== */
+  --bg-main: #f5f7fa;
   --bg-card: #ffffff;
+  --bg-sidebar: #ffffff;
+  --bg-sidebar-hover: #f0fdfa;
   --text-primary: #1e293b;
-  --text-secondary: #64748b;
+  --text-secondary: #475569;
   --text-light: #94a3b8;
-  --border: #e2e8f0;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-  --info: #3b82f6;
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --border: #e5eaf0;
+  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  --shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 10px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -2px rgba(15, 23, 42, 0.05);
+  --shadow-lg: 0 12px 24px -6px rgba(15, 23, 42, 0.12), 0 4px 8px -4px rgba(15, 23, 42, 0.08);
   --radius: 12px;
   --radius-sm: 8px;
   --radius-lg: 16px;
@@ -65,8 +77,9 @@ body {
   background: #94a3b8;
 }
 
+/* ===== 卡片 ===== */
 .el-card {
-  border: none !important;
+  border: 1px solid var(--border) !important;
   border-radius: var(--radius) !important;
   box-shadow: var(--shadow-sm) !important;
   transition: var(--transition) !important;
@@ -83,16 +96,30 @@ body {
   color: var(--text-primary) !important;
 }
 
+/* ===== 按钮 ===== */
 .el-button--primary {
   background: var(--primary) !important;
   border-color: var(--primary) !important;
 }
 
-.el-button--primary:hover {
+.el-button--primary:hover,
+.el-button--primary:focus {
   background: var(--primary-light) !important;
   border-color: var(--primary-light) !important;
 }
 
+.el-button--primary.is-plain {
+  background: #f0fdfa !important;
+  border-color: #99f6e4 !important;
+  color: var(--primary) !important;
+}
+
+.el-button--primary.is-plain:hover {
+  background: var(--primary) !important;
+  color: #fff !important;
+}
+
+/* ===== 表格 ===== */
 .el-table {
   border-radius: var(--radius-sm) !important;
   overflow: hidden;
@@ -103,7 +130,6 @@ body {
   color: var(--text-secondary) !important;
   font-weight: 600 !important;
   font-size: 13px !important;
-  text-transform: uppercase !important;
   letter-spacing: 0.5px !important;
 }
 
@@ -111,6 +137,11 @@ body {
   color: var(--text-primary) !important;
 }
 
+.el-table .el-table__row:hover > td.el-table__cell {
+  background: #f0fdfa !important;
+}
+
+/* ===== 对话框 ===== */
 .el-dialog {
   border-radius: var(--radius-lg) !important;
   overflow: hidden;
@@ -130,12 +161,48 @@ body {
   padding: 24px !important;
 }
 
-.el-input__wrapper {
+/* ===== 表单 ===== */
+.el-input__wrapper,
+.el-textarea__inner {
   border-radius: var(--radius-sm) !important;
 }
 
 .el-tag {
   border-radius: 6px !important;
+}
+
+/* ===== 分页（跟随 --el-color-primary） ===== */
+.el-pagination.is-background .el-pager li.is-active {
+  background-color: var(--el-color-primary) !important;
+}
+
+/* ===== 面包屑 / 步骤 / 进度 ===== */
+.el-breadcrumb__inner {
+  color: var(--text-secondary) !important;
+}
+
+/* ===== 通用页面头（多数视图共用） ===== */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+.page-desc {
+  font-size: 13px;
+  color: var(--text-light);
+  margin: 4px 0 0 0;
 }
 
 .fade-enter-active,

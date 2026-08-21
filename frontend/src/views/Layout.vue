@@ -22,8 +22,8 @@
         :collapse="isCollapse"
         router
         background-color="transparent"
-        text-color="rgba(255,255,255,0.65)"
-        active-text-color="#fff"
+        text-color="#475569"
+        active-text-color="#0d9488"
         class="side-menu"
         @select="handleMenuSelect"
       >
@@ -89,7 +89,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { ArrowDown, UserFilled, SwitchButton, Expand, Fold, Menu } from '@element-plus/icons-vue'
+import { ArrowDown, UserFilled, SwitchButton, Expand, Fold, Menu, ChatDotSquare } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -133,12 +133,14 @@ const menuItems = computed(() => {
   return routes
     .filter(r => {
       // 管理员专属页面
+      if (r.meta?.adminOnly) return userRole.value === 'admin'
+      // 管理员专属页面（兼容旧逻辑）
       if (r.path === 'users') return userRole.value === 'admin'
       // 学生专属页面
       if (r.meta?.studentOnly) return userRole.value === 'student'
       // 学生不能访问的管理页面
       if (userRole.value === 'student') {
-        const studentForbiddenRoutes = ['students', 'classes', 'courses', 'scores', 'score-rank', 'score-analysis', 'attendance', 'users', 'settings']
+        const studentForbiddenRoutes = ['dashboard', 'students', 'classes', 'courses', 'scores', 'score-rank', 'score-analysis', 'attendance', 'warning', 'export', 'schedule', 'homework', 'exams', 'scholarship', 'users', 'settings']
         return !studentForbiddenRoutes.includes(r.path)
       }
       // 教师和管理员不显示学生专属页面
@@ -172,10 +174,10 @@ const handleCommand = (command) => {
 }
 
 .aside {
-  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+  background: #ffffff;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
-  border-right: 1px solid rgba(255,255,255,0.06);
+  border-right: 1px solid #e5eaf0;
 }
 
 .logo {
@@ -186,19 +188,19 @@ const handleCommand = (command) => {
   padding: 0 16px;
   gap: 10px;
   cursor: pointer;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid #f1f5f9;
   transition: all 0.3s;
 }
 
 .logo:hover {
-  background: rgba(255,255,255,0.03);
+  background: #f8fafc;
 }
 
 .logo-icon {
   width: 32px;
   height: 32px;
   flex-shrink: 0;
-  color: #818cf8;
+  color: #0d9488;
 }
 
 .logo-icon svg {
@@ -207,9 +209,9 @@ const handleCommand = (command) => {
 }
 
 .logo-text {
-  color: #fff;
+  color: #1e293b;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
   letter-spacing: 0.5px;
 }
@@ -225,15 +227,18 @@ const handleCommand = (command) => {
   height: 44px !important;
   line-height: 44px !important;
   transition: all 0.2s;
+  font-weight: 500;
 }
 
 .side-menu .menu-item:hover {
-  background: rgba(255,255,255,0.06) !important;
+  background: #f1f5f9 !important;
+  color: #0f766e !important;
 }
 
 .side-menu .menu-item.is-active {
-  background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.15)) !important;
-  color: #fff !important;
+  background: linear-gradient(135deg, rgba(13,148,136,0.10), rgba(6,182,212,0.06)) !important;
+  color: #0d9488 !important;
+  font-weight: 600;
   position: relative;
 }
 
@@ -245,8 +250,12 @@ const handleCommand = (command) => {
   transform: translateY(-50%);
   width: 3px;
   height: 20px;
-  background: #6366f1;
+  background: #0d9488;
   border-radius: 0 3px 3px 0;
+}
+
+.side-menu .el-menu-item .el-icon {
+  color: inherit !important;
 }
 
 .header {
@@ -312,8 +321,8 @@ const handleCommand = (command) => {
 }
 
 .role-badge.admin {
-  background: rgba(99,102,241,0.1);
-  color: #6366f1;
+  background: rgba(13,148,136,0.10);
+  color: #0d9488;
 }
 
 .role-badge.teacher {
@@ -344,7 +353,7 @@ const handleCommand = (command) => {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, #0d9488, #06b6d4);
   color: #fff;
   display: flex;
   align-items: center;
@@ -365,7 +374,7 @@ const handleCommand = (command) => {
 }
 
 .main {
-  background: #f1f5f9;
+  background: #f5f7fa;
   padding: 24px;
   overflow-y: auto;
 }

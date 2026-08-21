@@ -1,10 +1,13 @@
 package com.example.student.controller;
 
+import com.example.student.common.RequireRole;
 import com.example.student.common.Result;
 import com.example.student.config.JwtConfig;
 import com.example.student.dto.LoginDTO;
 import com.example.student.entity.Student;
+import com.example.student.entity.StudentAccount;
 import com.example.student.entity.User;
+import com.example.student.mapper.StudentAccountMapper;
 import com.example.student.service.StudentService;
 import com.example.student.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +32,13 @@ public class AuthController {
     @Autowired
     private JwtConfig jwtConfig;
     
+    @Autowired
+    private StudentAccountMapper studentAccountMapper;
+    
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     
     @PostMapping("/login")
     public Result<Map<String, Object>> login(@Valid @RequestBody LoginDTO loginDTO) {
-        System.out.println("登录请求: username=" + loginDTO.getUsername() + ", password=" + loginDTO.getPassword());
-        
         String username = loginDTO.getUsername();
         String password = loginDTO.getPassword();
         
@@ -42,10 +46,8 @@ public class AuthController {
         User user = userService.findByUsername(username);
         
         if (user != null) {
-            System.out.println("找到用户: " + user.getUsername() + ", 数据库密码: " + user.getPassword());
-            
             if (user.getStatus() == 0) {
-                return Result.error("账号已被禁用");
+                return Result.error(403, "账号已被禁用");
             }
             
             // 验证密码
@@ -55,21 +57,19 @@ public class AuthController {
             if (storedPassword != null && (storedPassword.startsWith("$2a$") || storedPassword.startsWith("$2b$") || storedPassword.startsWith("$2y$"))) {
                 passwordMatch = passwordEncoder.matches(password, storedPassword);
             } else {
-                if ("admin".equals(user.getUsername())) {
-                    passwordMatch = "admin123".equals(password);
-                } else {
-                    passwordMatch = "teacher123".equals(password) || "admin123".equals(password);
-                }
+                // 兼容未加密密码（仅首次登录使用，登录后应强制修改密码）
+                passwordMatch = password.equals(storedPassword);
             }
             
             if (!passwordMatch) {
-                return Result.error("用户名或密码错误");
+                return Result.error(401, "用户名或密码错误");
             }
             
-            String token = jwtConfig.generateToken(user.getUsername(), user.getRole());
+            String token = jwtConfig.generateToken(user.getUsername(), user.getRole(), user.getId());
             
             Map<String, Object> data = new HashMap<>();
             data.put("token", token);
+            data.put("id", user.getId());
             data.put("username", user.getUsername());
             data.put("realName", user.getRealName());
             data.put("role", user.getRole());
@@ -81,25 +81,35 @@ public class AuthController {
         Student student = studentService.findByStudentNo(username);
         
         if (student != null) {
-            System.out.println("找到学生: " + student.getStudentNo() + ", 姓名: " + student.getName());
-            
-            // 学生默认密码：学号后6位或 123456
+            // 学生账号密码体系：首次登录使用默认密码（学号后6位或 123456）自动建档，
+            // 建档后按 BCrypt 校验密码，学生可在个人中心修改密码
             String studentNo = student.getStudentNo();
             String defaultPassword = studentNo;
             if (studentNo != null && studentNo.length() > 6) {
                 defaultPassword = studentNo.substring(studentNo.length() - 6);
             }
             
-            System.out.println("学生登录验证 - 输入密码: " + password + ", 期望密码: " + defaultPassword + " 或 123456");
-            
-            boolean passwordMatch = defaultPassword.equals(password) || "123456".equals(password);
-            
-            if (!passwordMatch) {
-                System.out.println("学生密码验证失败");
-                return Result.error("用户名或密码错误");
+            StudentAccount account = studentAccountMapper.findByStudentNo(studentNo);
+            boolean passwordMatch;
+            if (account == null) {
+                // 首次登录：校验默认密码并自动建档
+                passwordMatch = defaultPassword.equals(password) || "123456".equals(password);
+                if (passwordMatch) {
+                    StudentAccount newAccount = new StudentAccount();
+                    newAccount.setStudentId(student.getId());
+                    // 保存实际使用的密码（默认密码优先于 123456）
+                    newAccount.setPassword(passwordEncoder.encode(defaultPassword.equals(password) ? defaultPassword : "123456"));
+                    studentAccountMapper.insert(newAccount);
+                }
+            } else {
+                passwordMatch = passwordEncoder.matches(password, account.getPassword());
             }
             
-            String token = jwtConfig.generateToken(student.getStudentNo(), "student");
+            if (!passwordMatch) {
+                return Result.error(401, "用户名或密码错误");
+            }
+            
+            String token = jwtConfig.generateToken(student.getStudentNo(), "student", student.getId());
             
             Map<String, Object> data = new HashMap<>();
             data.put("token", token);
@@ -111,8 +121,7 @@ public class AuthController {
             return Result.success(data);
         }
         
-        System.out.println("用户不存在");
-        return Result.error("用户名或密码错误");
+        return Result.error(401, "用户名或密码错误");
     }
     
     @GetMapping("/info")
@@ -147,6 +156,8 @@ public class AuthController {
         return Result.success(data);
     }
     
+    // 修改密码：管理员/教师走 user 表，学生走 student_account 表（BCrypt 校验）
+    @RequireRole({"admin", "teacher", "student"})
     @PostMapping("/change-password")
     public Result<Void> changePassword(@RequestAttribute("username") String username,
                                         @RequestAttribute("role") String role,
@@ -157,10 +168,21 @@ public class AuthController {
         if (oldPassword == null || newPassword == null) {
             return Result.error("参数错误");
         }
+        if (newPassword.length() < 6) {
+            return Result.error("新密码长度至少6位");
+        }
         
-        // 学生暂不支持修改密码（因为没有存储密码）
+        // 学生账号：校验 student_account 中的 BCrypt 密码
         if ("student".equals(role)) {
-            return Result.error("学生账号暂不支持修改密码功能");
+            StudentAccount account = studentAccountMapper.findByStudentNo(username);
+            if (account == null) {
+                return Result.error("学生账号未初始化，请先使用默认密码登录");
+            }
+            if (!passwordEncoder.matches(oldPassword, account.getPassword())) {
+                return Result.error("旧密码错误");
+            }
+            studentAccountMapper.updatePassword(account.getId(), passwordEncoder.encode(newPassword));
+            return Result.success();
         }
         
         User user = userService.findByUsername(username);

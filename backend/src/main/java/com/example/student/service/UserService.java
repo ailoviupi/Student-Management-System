@@ -11,6 +11,8 @@ public interface UserService {
     
     List<User> findAll();
     
+    List<User> findByRole(String role);
+    
     boolean save(User user);
     
     boolean update(User user);

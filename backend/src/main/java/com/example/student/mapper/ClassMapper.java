@@ -8,10 +8,10 @@ import java.util.List;
 @Mapper
 public interface ClassMapper {
     
-    @Select("SELECT c.*, u.real_name as teacherName FROM class c LEFT JOIN user u ON c.teacher_id = u.id")
+    @Select("SELECT c.*, u.real_name as teacherName, (SELECT COUNT(*) FROM student s WHERE s.class_id = c.id) as studentCount FROM class c LEFT JOIN user u ON c.teacher_id = u.id")
     List<Class> findAll();
     
-    @Select("SELECT c.*, u.real_name as teacherName FROM class c LEFT JOIN user u ON c.teacher_id = u.id WHERE c.id = #{id}")
+    @Select("SELECT c.*, u.real_name as teacherName, (SELECT COUNT(*) FROM student s WHERE s.class_id = c.id) as studentCount FROM class c LEFT JOIN user u ON c.teacher_id = u.id WHERE c.id = #{id}")
     Class findById(@Param("id") Integer id);
     
     @Insert("INSERT INTO class (class_name, grade, major, teacher_id) VALUES (#{className}, #{grade}, #{major}, #{teacherId})")

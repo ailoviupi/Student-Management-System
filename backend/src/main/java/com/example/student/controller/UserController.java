@@ -1,5 +1,6 @@
 package com.example.student.controller;
 
+import com.example.student.common.RequireRole;
 import com.example.student.common.Result;
 import com.example.student.entity.User;
 import com.example.student.service.UserService;
@@ -23,6 +24,7 @@ public class UserController {
         return "admin".equals(role);
     }
 
+    @RequireRole("admin")
     @GetMapping
     public Result<List<User>> getAllUsers(HttpServletRequest request) {
         if (!isAdmin(request)) {
@@ -31,6 +33,19 @@ public class UserController {
         return Result.success(userService.findAll());
     }
 
+    // 教师/管理员可按角色获取用户列表（用于班级管理、排课等场景选择教师）
+    @RequireRole({"admin", "teacher"})
+    @GetMapping("/by-role")
+    public Result<List<User>> getUsersByRole(@RequestParam String role, HttpServletRequest request) {
+        // 允许所有已登录用户获取教师列表（用于班级管理选择班主任）
+        String userRole = (String) request.getAttribute("role");
+        if (userRole == null) {
+            return Result.error(403, "未登录");
+        }
+        return Result.success(userService.findByRole(role));
+    }
+
+    @RequireRole("admin")
     @GetMapping("/{id}")
     public Result<User> getUserById(@PathVariable Integer id, HttpServletRequest request) {
         if (!isAdmin(request)) {
@@ -43,6 +58,7 @@ public class UserController {
         return Result.success(user);
     }
 
+    @RequireRole("admin")
     @PostMapping
     public Result<User> addUser(@RequestBody User user, HttpServletRequest request) {
         if (!isAdmin(request)) {
@@ -58,6 +74,7 @@ public class UserController {
         return Result.error("添加失败");
     }
 
+    @RequireRole("admin")
     @PutMapping("/{id}")
     public Result<User> updateUser(@PathVariable Integer id, @RequestBody User user, HttpServletRequest request) {
         if (!isAdmin(request)) {
@@ -71,6 +88,7 @@ public class UserController {
         return Result.error("更新失败");
     }
 
+    @RequireRole("admin")
     @DeleteMapping("/{id}")
     public Result<Void> deleteUser(@PathVariable Integer id, HttpServletRequest request) {
         if (!isAdmin(request)) {
@@ -83,6 +101,7 @@ public class UserController {
         return Result.error("删除失败");
     }
 
+    @RequireRole("admin")
     @PutMapping("/{id}/status")
     public Result<Void> updateUserStatus(@PathVariable Integer id, @RequestParam Integer status, HttpServletRequest request) {
         if (!isAdmin(request)) {

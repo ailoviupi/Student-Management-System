@@ -1,5 +1,6 @@
 package com.example.student.controller;
 
+import com.example.student.common.RequireRole;
 import com.example.student.common.Result;
 import com.example.student.service.StudentService;
 import com.example.student.vo.StatisticsVO;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/statistics")
 @CrossOrigin
+@RequireRole({"admin", "teacher"})
 public class StatisticsController {
     
     @Autowired

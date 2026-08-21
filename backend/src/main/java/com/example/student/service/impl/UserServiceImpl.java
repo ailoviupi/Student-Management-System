@@ -33,6 +33,11 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
+    public List<User> findByRole(String role) {
+        return userMapper.findByRole(role);
+    }
+    
+    @Override
     public boolean save(User user) {
         if (user.getPassword() == null || user.getPassword().isEmpty()) {
             user.setPassword("123456");

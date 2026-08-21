@@ -1,0 +1,22 @@
+# Render Blueprint —— 免费部署后端（方案 A）
+# 用法：把代码推到 GitHub → Render 控制台 New+ → Blueprint → 选择本仓库，自动读取本文件
+# 免费 Web Service：512MB RAM，15 分钟无访问自动休眠，冷启动约 1 分钟；每月 750 小时额度，休眠时不消耗
+# 部署后域名形如：https://student-management.onrender.com
+services:
+  - type: web
+    name: student-management
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    healthCheckPath: /api/auth/login
+    envVars:
+      # 以下四项在 TiDB Cloud Serverless 创建集群后获取（见 DEPLOY.md）
+      - key: DB_URL
+        value: jdbc:mysql://REPLACE-WITH-TIDB-HOST:4000/student_db?useSSL=true&requireSSL=true&sslMode=VERIFY_IDENTITY&enabledTLSProtocols=TLSv1.2,TLSv1.3&serverTimezone=Asia/Shanghai
+      - key: DB_USERNAME
+        value: REPLACE-WITH-TIDB-USER
+      # 敏感项不在仓库里写死，部署后在 Render 控制台手动填写（sync: false）
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false

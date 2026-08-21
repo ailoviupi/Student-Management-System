@@ -107,7 +107,7 @@
               </div>
               <div class="score-bar-item">
                 <span class="bar-label">及格</span>
-                <el-progress :percentage="getPercentage(row.pass, row.total)" :color="'#8b5cf6'" :show-text="false" :stroke-width="8" />
+                <el-progress :percentage="getPercentage(row.pass, row.total)" :color="'#0891b2'" :show-text="false" :stroke-width="8" />
                 <span class="bar-value">{{ row.pass }}</span>
               </div>
               <div class="score-bar-item">
@@ -274,7 +274,7 @@ const initDistributionChart = (data) => {
         { name: '优秀(90-100)', value: parseInt(data.excellent || 0), itemStyle: { color: '#10b981' } },
         { name: '良好(80-89)', value: parseInt(data.good || 0), itemStyle: { color: '#3b82f6' } },
         { name: '中等(70-79)', value: parseInt(data.medium || 0), itemStyle: { color: '#f59e0b' } },
-        { name: '及格(60-69)', value: parseInt(data.pass || 0), itemStyle: { color: '#8b5cf6' } },
+        { name: '及格(60-69)', value: parseInt(data.pass || 0), itemStyle: { color: '#0891b2' } },
         { name: '不及格(<60)', value: parseInt(data.fail || 0), itemStyle: { color: '#ef4444' } }
       ]
     }]
@@ -329,11 +329,11 @@ const initTrendChart = (data) => {
       symbol: 'circle',
       symbolSize: 8,
       lineStyle: {
-        color: '#6366f1',
+        color: '#0d9488',
         width: 3
       },
       itemStyle: {
-        color: '#6366f1',
+        color: '#0d9488',
         borderWidth: 2,
         borderColor: '#fff'
       },
@@ -432,7 +432,7 @@ onMounted(() => {
 }
 
 .stat-card.purple .stat-icon {
-  background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+  background: linear-gradient(135deg, #0891b2, #22d3ee);
 }
 
 .stat-info {

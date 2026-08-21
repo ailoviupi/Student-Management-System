@@ -1,5 +1,6 @@
 package com.example.student.controller;
 
+import com.example.student.common.RequireRole;
 import com.example.student.common.Result;
 import com.example.student.entity.Course;
 import com.example.student.service.CourseService;
@@ -11,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/courses")
 @CrossOrigin
+@RequireRole({"admin", "teacher"})
 public class CourseController {
     
     @Autowired

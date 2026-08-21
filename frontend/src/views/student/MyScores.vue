@@ -10,7 +10,7 @@
     <!-- 统计卡片 -->
     <div class="stats-cards" v-if="statistics">
       <div class="stat-card">
-        <div class="stat-icon" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #0d9488, #0891b2);">
           <el-icon><Trophy /></el-icon>
         </div>
         <div class="stat-info">
@@ -242,7 +242,7 @@ onMounted(() => {
 }
 
 .score-good {
-  color: #6366f1;
+  color: #0d9488;
   font-weight: 600;
 }
 
